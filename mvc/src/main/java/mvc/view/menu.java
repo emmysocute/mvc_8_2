@@ -8,6 +8,7 @@ public class menu {
             System.out.println("1. Student List");
             System.out.println("2. Graduation Readiness Assessment");
             System.out.println("3. Assessment Results");
+            System.out.println("4. Reset _data or Create New Data");
             System.out.println("0. Exit");
             System.out.print("Select menu: ");
     }

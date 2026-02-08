@@ -12,9 +12,6 @@ public class Model {
 
             String url = "jdbc:duckdb:data.db";
             this.conn = DriverManager.getConnection(url);
-
-            // setupDatabase();
-            // cleardata();
             setdata();
             System.out.println("เชื่อมต่อ DuckDB");
         } catch (ClassNotFoundException e) {
@@ -55,29 +52,16 @@ public class Model {
                 ");");
     }
 
-    // public void addProject(int id, String name) {
-    // String sql = "INSERT INTO projects (id, name) VALUES (?, ?)";
-
-    // try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-    // pstmt.setInt(1, id);
-    // pstmt.setString(2, name);
-    // pstmt.executeUpdate();
-    // System.out.println("เพิ่มข้อมูลสำเร็จ: " + name);
-
-    // } catch (SQLException e) {
-    // System.err.println("เพิ่มข้อมูลไม่สำเร็จ: " + e.getMessage());
-    // }
-
-    // }
-    public Connection getConn()
-    {
+    public Connection getConn() {
         return conn;
     }
+
     public void showName() {
         String sql = "SELECT \r\n" + //
                 "    s.student_id, \r\n" + //
                 "    s.first_name, \r\n" + //
-                "    s.last_name \r\n" + //
+                "    s.last_name, \r\n" + //
+                "    s.status \r\n" + //
                 "FROM Students s\r\n";
 
         try (Statement stmt = conn.createStatement();
@@ -87,9 +71,11 @@ public class Model {
                 int id = rs.getInt("student_id");
                 String name = rs.getString("first_name");
                 String lastname = rs.getString("last_name");
+                String status  = rs.getString("status");
 
-                System.out.println("ID: " + id + " | Name: " + name + " " + lastname);
+                System.out.println("ID: " + id + " | Name: " + name + " " + lastname +" status :" + status);
             }
+            System.out.println("EXIT : 0");
 
         } catch (SQLException e) {
             System.err.println(" ดึงข้อมูลไม่สำเร็จ: " + e.getMessage());
@@ -103,7 +89,7 @@ public class Model {
                 "    s.last_name, " +
                 "    c.accumulated_credits, " +
                 "    p.project_status, " +
-                "    s.status, " + // เพิ่มคอมม่าตรงนี้
+                "    g.evaluation_result, " + // เพิ่มคอมม่าตรงนี้
                 "    g.evaluation_date " + // เคาะสเปซปิดท้าย
                 "FROM Students s " + // เคาะสเปซปิดท้าย
                 "JOIN Credits c ON s.student_id = c.student_id " +
@@ -120,7 +106,7 @@ public class Model {
                 String lastname = rs.getString("last_name");
                 int credit = rs.getInt("accumulated_credits");
                 String project_s = rs.getString("project_status");
-                String status = rs.getString("status");
+                String status = rs.getString("evaluation_result");
                 LocalDate day = rs.getObject("evaluation_date", LocalDate.class);
                 System.out.println("ID: " + id + " | Name: " + name + " " + lastname + " credit : " + credit
                         + " project_status : " + project_s + " status_graduation :" + status + " data_eva : " + day);
@@ -140,51 +126,47 @@ public class Model {
                         INSERT INTO Students VALUES ('64001', 'สมชาย', 'สายเรียน', 'วิศวกรรมคอมพิวเตอร์', 'วิศวกรรมศาสตร์', 'จบการศึกษา');
                         INSERT INTO Students VALUES ('64002', 'สมหญิง', 'จริงใจ', 'วิทยาการคอมพิวเตอร์', 'วิทยาศาสตร์', 'กำลังเรียน');
                         INSERT INTO Students VALUES ('64003', 'มานะ', 'อดทน', 'เทคโนโลยีสารสนเทศ', 'เทคโนโลยีสารสนเทศ', 'กำลังเรียน');
+                        INSERT INTO Students VALUES ('64004', 'มานี', 'อดทน', 'เทคโนโลยีสารสนเทศ', 'เทคโนโลยีสารสนเทศ', 'กำลังเรียน');
 
 
                         INSERT INTO Credits VALUES ('64001', 135);
                         INSERT INTO Credits VALUES ('64002', 122);
                         INSERT INTO Credits VALUES ('64003', 95);
+                        INSERT INTO Credits VALUES ('64004', 155);
 
 
-                        INSERT INTO Projects VALUES ('PJ001', '64001', 'ผ่านแล้ว');
-                        INSERT INTO Projects VALUES ('PJ002', '64002', 'ผ่านแล้ว');
-                        INSERT INTO Projects VALUES ('PJ003', '64003', 'ยังไม่ผ่าน');
+                        INSERT INTO Projects VALUES ('PJ001', '64001', 'Pass');
+                        INSERT INTO Projects VALUES ('PJ002', '64002', 'Pass');
+                        INSERT INTO Projects VALUES ('PJ003', '64003', 'Fail');
+                        INSERT INTO Projects VALUES ('PJ004', '64004', 'Pass');
 
 
-                        INSERT INTO GraduationResults VALUES ('64001', 'อนุมัติการจบการศึกษา', '2025-10-15');
-                        INSERT INTO GraduationResults VALUES ('64002', 'รอตรวจสอบขั้นสุดท้าย', '2026-02-01');
-                        INSERT INTO GraduationResults VALUES ('64003', 'ไม่ผ่านเกณฑ์', '2026-02-05');
+                        INSERT INTO GraduationResults VALUES ('64001', 'สามารถจบการศึกษา', '2025-10-15');
+                        INSERT INTO GraduationResults VALUES ('64002', 'ไม่ทราบผล', NULL);
+                        INSERT INTO GraduationResults VALUES ('64003', 'ไม่ทราบผม', NULL);
+                        INSERT INTO GraduationResults VALUES ('64004', 'ไม่ทราบผล', NULL);
+
+
                                         """);
     }
-
-    public void cleardata() throws SQLException {
-        Statement stmt = conn.createStatement();
-        stmt.execute("DELETE FROM projects");
+    public void setNewData()throws SQLException
+    {
+        dropAllTables();
+        setupDatabase();
+        setdata();
     }
+   public void dropAllTables() throws SQLException {
+    Statement stmt = conn.createStatement();
+    
+    stmt.execute("DROP TABLE IF EXISTS GraduationResults");
+    stmt.execute("DROP TABLE IF EXISTS Projects");
+    stmt.execute("DROP TABLE IF EXISTS Credits");
+    
 
-    public boolean updateProjectStatus(int id, String status) {
+    stmt.execute("DROP TABLE IF EXISTS Students");
 
-        String sql = "UPDATE projects SET project_status = ? WHERE id = ?";
+    System.out.println(" ลบตารางทั้งหมด");
+}
 
-        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setString(1, status);
-            pstmt.setInt(2, id);
-
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                System.out.println("แก้ไขชื่อสำเร็จ");
-                return true;
-            } else {
-                System.out.println("ไม่พบ ID ที่ระบุ");
-                return false;
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+   
 }
