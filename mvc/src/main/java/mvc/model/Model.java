@@ -12,7 +12,6 @@ public class Model {
 
             String url = "jdbc:duckdb:data.db";
             this.conn = DriverManager.getConnection(url);
-            setdata();
             System.out.println("เชื่อมต่อ DuckDB");
         } catch (ClassNotFoundException e) {
             System.err.println("ไม่พบ Driver DuckDB");

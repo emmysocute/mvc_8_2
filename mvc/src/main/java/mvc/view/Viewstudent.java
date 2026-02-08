@@ -1,6 +1,6 @@
 package mvc.view;
 
-import java.lang.ModuleLayer.Controller;
+
 public class Viewstudent {
 
 

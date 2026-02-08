@@ -37,6 +37,7 @@ public class Controller {
                     models.showName();
                     in = showmenu.getInt();
                     while (in != 0) {
+                    in = showmenu.getInt();
                     }
                     break;
                 case 3:
@@ -44,6 +45,7 @@ public class Controller {
                     models.showresult();
                     in = showmenu.getInt();
                     while (in != 0) {
+                    in = showmenu.getInt();
                     }
                     break;
                 case 2:
@@ -54,9 +56,14 @@ public class Controller {
                     models.showresult();
                     in = showmenu.getInt();
                     while (in != 0) {
+                    in = showmenu.getInt();
                     }
                     viewstu.showstudent();
                     models.showName();
+                    in = showmenu.getInt();
+                     while (in != 0) {
+                    in = showmenu.getInt();
+                    }
                     break;
                 case 4:
                     try {
