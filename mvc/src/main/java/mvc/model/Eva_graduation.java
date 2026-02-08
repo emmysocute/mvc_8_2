@@ -6,12 +6,12 @@ import java.sql.SQLException;
 
 public class Eva_graduation {
      Connection conn;
-     Evalation_credits Eva_credits;
+     Evaluation_credits Eva_credits;
      Evaluation_project Eva_project;
     public Eva_graduation() {
         Model modeldb = new Model();
         conn = modeldb.getConn();
-        this.Eva_credits = new Evalation_credits();
+        this.Eva_credits = new Evaluation_credits();
         this.Eva_project = new Evaluation_project();
     }
      public void evaluateGraduation(String studentId) {

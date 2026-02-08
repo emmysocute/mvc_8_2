@@ -39,14 +39,14 @@ public class Controller {
                     while (in != 0) {
                     }
                     break;
-                case 2:
+                case 3:
                     checkView.showresult();
                     models.showresult();
                     in = showmenu.getInt();
                     while (in != 0) {
                     }
                     break;
-                case 3:
+                case 2:
                     checkView.fillstudentid();
                     in = showmenu.getInt();
                     Eva_gradua.evaluateGraduation(in + "");

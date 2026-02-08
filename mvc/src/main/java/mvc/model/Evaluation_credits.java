@@ -5,10 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Evalation_credits {
+public class Evaluation_credits {
     Connection conn;
 
-    Evalation_credits() {
+    Evaluation_credits() {
         Model modeldb = new Model();
         conn = modeldb.getConn();
     }
